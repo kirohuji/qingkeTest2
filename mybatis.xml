@@ -4,6 +4,13 @@
 	<properties resource="t20170726/conn.properties">
 		<property name="jdbc" value="com.mysql.jdbc.Driver" />
 	</properties>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="logImpl" value="LOG4J"/>
+	</settings>
+	 <typeAliases>
+	 <typeAlias type="t20170726.User" alias="User"/>
+	 </typeAliases>
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />  <!-- MANAGED -->
@@ -20,8 +27,8 @@
 
 	<mappers>
 
-		<!-- <mapper class="com.qingke.mapper.userMapper" /> -->
-		 <mapper class="t20170726.BlogMapper" />
+		<mapper resource="t20170726/userMapper.xml" />
+		<mapper class="t20170726.BlogMapper" />
 	</mappers>
 
 </configuration>

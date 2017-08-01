@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的 
+	例如namespace="me.gacl.mapping.userMapper"就是me.gacl.mapping(包名)+userMapper(userMapper.xml文件去除后缀) -->
+<mapper namespace="t20170726.userMapper">
+	<select id="selectById" parameterType="int" resultType="User">
+		select *
+		from user where id=#{id}
+	</select>
+	<sql id="userColumns">${alias}.name</sql>
+	<select id="selectUsers" parameterType="int" resultMap="userResultMap">
+		select
+		<include refid="userColumns">
+			<property name="alias" value="user" />
+		</include>
+		from user where id=#{id};
+	</select>
+	<insert id="insertUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into user(name)values
+		(#{name})
+	</insert>
+
+	<insert id="insertUsers" parameterType="list" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into User (name) values
+		<foreach item="item" collection="list" separator=",">
+			(#{item.name})
+		</foreach>
+	</insert>
+
+
+
+	<select id="selectUser" parameterType="int" resultMap="userResult">
+		SELECT *
+		FROM user WHERE id = #{id}
+	</select>
+
+	<select id="selectPostsForBlog" resultType="t20170726.Address">
+		SELECT * FROM address
+		WHERE user_id = #{id}
+	</select>
+	<resultMap id="userResult" type="User">
+		<collection property="addresses" column="id" ofType="t20170726.Address"
+			select="selectPostsForBlog" />
+	</resultMap>
+
+
+
+
+
+
+
+
+	<select id="selectUserss" parameterType="int" resultMap="userResultMap">
+		select
+		*
+		from user where id=#{id};
+	</select>
+	<select id="selectAddress" parameterType="int" resultType="t20170726.Address">
+		SELECT * FROM address WHERE user_id = #{id}
+	</select>
+	<resultMap id="userResultMap" type="User">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<collection property="addresses" javaType="ArrayList" column="id"
+			select="selectAddress" />
+	</resultMap>
+</mapper>
